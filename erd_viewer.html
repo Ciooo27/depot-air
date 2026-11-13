@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERD Diagram Database - AquaDepot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #F4F8FC;
+            color: #2C3E50;
+            padding: 30px 15px;
+        }
+        .header-box {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(25, 118, 210, 0.08);
+            margin-bottom: 25px;
+            border: 1px solid rgba(25, 118, 210, 0.1);
+        }
+        .erd-container {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+            overflow: auto;
+            border: 1px solid rgba(25, 118, 210, 0.1);
+            text-align: center;
+        }
+        .btn-action {
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #fff; padding: 0; }
+            .erd-container { box-shadow: none; border: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid" style="max-width: 1400px;">
+    <!-- Top Action Header -->
+    <div class="header-box d-flex flex-wrap justify-content-between align-items-center gap-3 no-print">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <i class="bi bi-diagram-3-fill text-primary fs-3"></i>
+                <h4 class="fw-bold mb-0">Diagram ERD (Entity Relationship Diagram)</h4>
+            </div>
+            <p class="text-muted small mb-0">Basis Data: <strong>aquadepot_db</strong> (14 Tabel Relasional + 1 Tabel Pengaturan)</p>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2">
+            <button onclick="downloadERDAsPNG()" class="btn btn-primary btn-action shadow-sm">
+                <i class="bi bi-file-earmark-image"></i> Download Gambar PNG (HD)
+            </button>
+            <button onclick="downloadERDAsSVG()" class="btn btn-success btn-action shadow-sm">
+                <i class="bi bi-file-earmark-code"></i> Download Gambar SVG
+            </button>
+            <button onclick="window.print()" class="btn btn-outline-secondary btn-action">
+                <i class="bi bi-printer"></i> Cetak / PDF
+            </button>
+            <a href="index.php" class="btn btn-light btn-action border">
+                <i class="bi bi-arrow-left"></i> Kembali ke Web
+            </a>
+        </div>
+    </div>
+
+    <!-- ERD Canvas Box -->
+    <div class="erd-container" id="erdWrapper">
+        <div class="mermaid text-center" id="mermaidDiagram">
+erDiagram
+    roles ||--o{ users : "memiliki"
+    users ||--o| karyawan : "profil karyawan"
+    users ||--o| pelanggan : "profil pelanggan"
+    kategori ||--o{ produk : "mengelompokkan"
+    produk ||--o| stok : "memiliki jumlah"
+    produk ||--o{ riwayat_stok : "tercatat mutasi"
+    users ||--o{ riwayat_stok : "diinput oleh"
+    
+    pelanggan ||--o{ pesanan : "membuat"
+    pesanan ||--o{ detail_pesanan : "memuat item"
+    produk ||--o{ detail_pesanan : "dipesan pada"
+    pesanan ||--o| pengiriman : "memiliki jadwal"
+    users ||--o{ pengiriman : "diantar oleh kurir"
+    
+    pelanggan ||--o{ transaksi : "bertransaksi"
+    users ||--o{ transaksi : "dilayani kasir"
+    pesanan ||--o| transaksi : "diterbitkan dari"
+    transaksi ||--o{ detail_transaksi : "memuat item"
+    produk ||--o{ detail_transaksi : "dijual pada"
+    
+    pesanan ||--o{ pembayaran : "dibayar melalui"
+    transaksi ||--o{ pembayaran : "status bayar"
+    users ||--o{ pembayaran : "diverifikasi oleh"
+
+    roles {
+        int id PK
+        string nama_role
+        string deskripsi
+    }
+    users {
+        int id PK
+        int role_id FK
+        string username UK
+        string email UK
+        string password
+        string nama_lengkap
+        string no_telepon
+        enum status_aktif
+    }
+    pelanggan {
+        int id PK
+        int user_id FK
+        string kode_pelanggan UK
+        string nama
+        string no_telepon
+        text alamat
+        enum tipe_pelanggan
+    }
+    karyawan {
+        int id PK
+        int user_id FK
+        string nip UK
+        string jabatan
+        decimal gaji_pokok
+        date tanggal_masuk
+    }
+    kategori {
+        int id PK
+        string nama_kategori
+        string slug UK
+        text deskripsi
+    }
+    produk {
+        int id PK
+        int kategori_id FK
+        string kode_produk UK
+        string nama_produk
+        decimal harga_modal
+        decimal harga_jual
+        string satuan
+        string gambar
+        boolean is_featured
+        enum status
+    }
+    stok {
+        int id PK
+        int produk_id FK
+        int stok_tersedia
+        int stok_minimum
+    }
+    transaksi {
+        int id PK
+        string kode_transaksi UK
+        int pesanan_id FK
+        int pelanggan_id FK
+        int kasir_user_id FK
+        datetime tanggal_transaksi
+        int total_item
+        decimal subtotal
+        decimal diskon
+        decimal biaya_pengiriman
+        decimal total_akhir
+        enum metode_pembayaran
+        decimal jumlah_bayar
+        decimal kembalian
+        enum status_pembayaran
+    }
+    detail_transaksi {
+        int id PK
+        int transaksi_id FK
+        int produk_id FK
+        string nama_produk
+        decimal harga_satuan
+        int jumlah
+        decimal subtotal
+    }
+    pesanan {
+        int id PK
+        string kode_pesanan UK
+        int pelanggan_id FK
+        datetime tanggal_pesanan
+        enum metode_pengambilan
+        text alamat_pengiriman
+        text catatan
+        enum metode_pembayaran
+        decimal total_harga
+        decimal biaya_pengiriman
+        decimal total_bayar
+        enum status_pesanan
+    }
+    detail_pesanan {
+        int id PK
+        int pesanan_id FK
+        int produk_id FK
+        decimal harga_satuan
+        int jumlah
+        decimal subtotal
+    }
+    pengiriman {
+        int id PK
+        int pesanan_id FK
+        int kurir_user_id FK
+        string kode_pengiriman UK
+        enum status_pengiriman
+        text alamat_tujuan
+        text catatan_kurir
+    }
+    pembayaran {
+        int id PK
+        int transaksi_id FK
+        int pesanan_id FK
+        string kode_pembayaran UK
+        enum metode
+        decimal jumlah
+        enum status
+    }
+    riwayat_stok {
+        int id PK
+        int produk_id FK
+        int user_id FK
+        enum jenis
+        int jumlah
+        int stok_sebelum
+        int stok_sesudah
+        string keterangan
+    }
+    pengaturan {
+        int id PK
+        string nama_depot
+        string slogan
+        text alamat
+        string no_whatsapp
+        decimal ongkos_kirim_default
+        text rekening_bank
+    }
+        </div>
+    </div>
+</div>
+
+<script>
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    er: {
+        useMaxWidth: false,
+        fontSize: 13
+    }
+});
+
+// Download As SVG
+function downloadERDAsSVG() {
+    const svgElement = document.querySelector('#mermaidDiagram svg');
+    if (!svgElement) {
+        alert('Diagram sedang dimuat, silakan tunggu sebentar.');
+        return;
+    }
+    const svgData = new XMLSerializer().serializeToString(svgElement);
+    const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ERD_AquaDepot_Database.svg';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Download As PNG (High Resolution)
+function downloadERDAsPNG() {
+    const svgElement = document.querySelector('#mermaidDiagram svg');
+    if (!svgElement) {
+        alert('Diagram sedang dimuat, silakan tunggu sebentar.');
+        return;
+    }
+
+    const bbox = svgElement.getBoundingClientRect();
+    const width = bbox.width * 2 || 2400;
+    const height = bbox.height * 2 || 1800;
+
+    const svgData = new XMLSerializer().serializeToString(svgElement);
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+
+    // Fill white background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, width, height);
+
+    const img = new Image();
+    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+
+    img.onload = function () {
+        ctx.drawImage(img, 0, 0, width, height);
+        URL.revokeObjectURL(url);
+        
+        const pngUrl = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = pngUrl;
+        a.download = 'ERD_AquaDepot_Database.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
+    img.src = url;
+}
+</script>
+</body>
+</html>
+

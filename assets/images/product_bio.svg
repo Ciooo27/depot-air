@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="bioGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4CAF50" />
+      <stop offset="100%" stop-color="#2EAD68" />
+    </linearGradient>
+    <linearGradient id="bioBody" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E8F5E9" />
+      <stop offset="50%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#C8E6C9" />
+    </linearGradient>
+  </defs>
+  <!-- Cap -->
+  <rect x="85" y="20" width="30" height="15" rx="4" fill="#2EAD68" />
+  <rect x="88" y="35" width="24" height="15" rx="2" fill="#43A047" />
+  <!-- Gallon Neck -->
+  <path d="M78 50 L122 50 L135 75 L65 75 Z" fill="url(#bioBody)" stroke="#A5D6A7" stroke-width="2"/>
+  <!-- Gallon Body -->
+  <rect x="60" y="75" width="80" height="95" rx="14" fill="url(#bioBody)" stroke="#81C784" stroke-width="2"/>
+  <!-- Ribs -->
+  <line x1="62" y1="100" x2="138" y2="100" stroke="#A5D6A7" stroke-width="3" stroke-linecap="round"/>
+  <line x1="62" y1="125" x2="138" y2="125" stroke="#A5D6A7" stroke-width="3" stroke-linecap="round"/>
+  <line x1="62" y1="150" x2="138" y2="150" stroke="#A5D6A7" stroke-width="3" stroke-linecap="round"/>
+  <!-- Bio Energy Hexagon Badge -->
+  <circle cx="100" cy="112" r="16" fill="#2EAD68" />
+  <text x="100" y="116" font-size="9" font-weight="bold" fill="#FFFFFF" text-anchor="middle" font-family="Arial">BIO</text>
+</svg>
