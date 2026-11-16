@@ -15,7 +15,7 @@ $waMessage = urlencode("Halo " . ($pengaturan['nama_depot'] ?? 'AquaDepot') . ",
                     <span class="fw-bold fs-4"><?= htmlspecialchars($pengaturan['nama_depot']) ?></span>
                 </div>
                 <p class="text-muted small mb-3">
-                    <?= htmlspecialchars($pengaturan['slogan']) ?>. Kami melayani isi ulang air minum RO berkualitas tinggi, galon bermerek original, dan air kemasan untuk kebutuhan rumah tangga maupun bisnis.
+                    <?= htmlspecialchars($pengaturan['slogan']) ?>. Kami melayani isi ulang air minum murni Reverse Osmosis (RO) dan Bio-Energy Mineral berkualitas tinggi untuk kebutuhan keluarga maupun instansi.
                 </p>
                 <div class="d-flex gap-2">
                     <a href="https://wa.me/<?= $waNumber ?>?text=<?= $waMessage ?>" target="_blank" class="btn btn-sm btn-outline-success rounded-circle" style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
@@ -59,7 +59,11 @@ $waMessage = urlencode("Halo " . ($pengaturan['nama_depot'] ?? 'AquaDepot') . ",
             <div class="col-lg-3 col-md-6">
                 <h6 class="fw-bold mb-3">Lokasi & Kontak</h6>
                 <p class="text-muted small mb-2">
-                    <i class="bi bi-geo-alt-fill text-danger me-2"></i><?= nl2br(htmlspecialchars($pengaturan['alamat'])) ?>
+                    <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+                    <a href="<?= google_maps_url($pengaturan['alamat'] ?? null) ?>" target="_blank" class="text-reset text-decoration-none" title="Klik untuk membuka lokasi di Google Maps">
+                        <?= nl2br(htmlspecialchars($pengaturan['alamat'])) ?>
+                        <br><span class="badge bg-primary-subtle text-primary mt-1"><i class="bi bi-box-arrow-up-right me-1"></i>Buka di Google Maps</span>
+                    </a>
                 </p>
                 <p class="text-muted small mb-2">
                     <i class="bi bi-whatsapp text-success me-2"></i><?= htmlspecialchars($pengaturan['no_whatsapp']) ?>

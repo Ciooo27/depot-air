@@ -33,8 +33,33 @@ class Database {
                 PDO::ATTR_EMULATE_PREPARES   => false,
             ];
 
+            // Support SSL for remote cloud databases (Aiven / TiDB / Railway)
+            if ($host !== 'localhost' && $host !== '127.0.0.1') {
+                if (defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
+                    $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+                }
+            }
+
             try {
                 self::$conn = new PDO($dsn, $user, $pass, $options);
+
+                // Pastikan konsistensi: hanya 2 produk (Air RO & Air BIO) dan alamat depot terupdate
+                try {
+                    self::$conn->exec("DELETE FROM detail_transaksi WHERE produk_id NOT IN (1, 2)");
+                    self::$conn->exec("DELETE FROM detail_pesanan WHERE produk_id NOT IN (1, 2)");
+                    self::$conn->exec("DELETE FROM riwayat_stok WHERE produk_id NOT IN (1, 2)");
+                    self::$conn->exec("DELETE FROM stok WHERE produk_id NOT IN (1, 2)");
+                    self::$conn->exec("DELETE FROM produk WHERE id NOT IN (1, 2)");
+                    self::$conn->exec("DELETE FROM kategori WHERE id NOT IN (1, 2)");
+                    
+                    // Pastikan alamat dan embed maps tepat ke Salatiga
+                    self::$conn->exec("UPDATE pengaturan SET 
+                        alamat = 'Jl. Ki Penjawi 12-10, Sidorejo Lor, Kec. Sidorejo, Kota Salatiga, Jawa Tengah 50714',
+                        maps_embed = '<iframe src=\"https://maps.google.com/maps?q=Jl.+Ki+Penjawi+12-10,+Sidorejo+Lor,+Kec.+Sidorejo,+Kota+Salatiga,+Jawa+Tengah+50714&t=&z=16&ie=UTF8&iwloc=&output=embed\" width=\"100%\" height=\"380\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\"></iframe>'
+                        WHERE id = 1");
+                } catch (Exception $eClean) {
+                    // Abaikan jika tabel belum terisi
+                }
             } catch (PDOException $e) {
                 // If database doesn't exist (Error 1049), attempt auto-creation
                 if ($e->getCode() == 1049 || strpos($e->getMessage(), 'Unknown database') !== false) {

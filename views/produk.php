@@ -50,8 +50,8 @@ $products = $stmt->fetchAll();
         </nav>
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
             <div>
-                <h2 class="fw-bold mb-1">Katalog Air Minum & Perlengkapan</h2>
-                <p class="text-muted mb-0">Pilih kebutuhan air minum keluarga, kantor, atau usaha Anda dengan jaminan higienis.</p>
+                <h2 class="fw-bold mb-1">Katalog Produk Air Minum</h2>
+                <p class="text-muted mb-0">Menyediakan 2 pilihan air minum isi ulang berkualitas tinggi: Air RO dan Air BIO.</p>
             </div>
         </div>
     </div>
@@ -64,7 +64,7 @@ $products = $stmt->fetchAll();
                     <span class="input-group-text bg-transparent border-end-0">
                         <i class="bi bi-search text-muted"></i>
                     </span>
-                    <input type="text" name="search" class="form-control border-start-0" placeholder="Cari nama produk air atau kemasan..." value="<?= htmlspecialchars($search) ?>">
+                    <input type="text" name="search" class="form-control border-start-0" placeholder="Cari Air RO atau Air BIO..." value="<?= htmlspecialchars($search) ?>">
                     <button class="btn btn-primary px-4" type="submit">Cari</button>
                 </div>
             </div>

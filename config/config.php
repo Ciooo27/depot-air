@@ -270,7 +270,8 @@ function get_pengaturan() {
                     'email' => 'info@aquadepot.id',
                     'jam_operasional' => '07.00 - 20.00 WIB',
                     'ongkos_kirim_default' => 3000,
-                    'rekening_bank' => 'BCA: 123-456-7890 a/n AquaDepot'
+                    'rekening_bank' => 'BCA: 123-456-7890 a/n AquaDepot',
+                    'maps_embed' => '<iframe src="https://maps.google.com/maps?q=Jl.+Ki+Penjawi+12-10,+Sidorejo+Lor,+Kec.+Sidorejo,+Kota+Salatiga,+Jawa+Tengah+50714&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="380" style="border:0;" allowfullscreen="" loading="lazy"></iframe>'
                 ];
             }
         } catch (Exception $e) {
@@ -283,10 +284,29 @@ function get_pengaturan() {
                 'email' => 'info@aquadepot.id',
                 'jam_operasional' => '07.00 - 20.00 WIB',
                 'ongkos_kirim_default' => 3000,
-                'rekening_bank' => 'BCA: 123-456-7890 a/n AquaDepot'
+                'rekening_bank' => 'BCA: 123-456-7890 a/n AquaDepot',
+                'maps_embed' => '<iframe src="https://maps.google.com/maps?q=Jl.+Ki+Penjawi+12-10,+Sidorejo+Lor,+Kec.+Sidorejo,+Kota+Salatiga,+Jawa+Tengah+50714&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="380" style="border:0;" allowfullscreen="" loading="lazy"></iframe>'
             ];
         }
     }
     return $settings;
+}
+
+/**
+ * URL Google Maps Langsung Sesuai Alamat Depot
+ * @param string|null $alamat Alamat kustom atau default dari pengaturan
+ * @param string $type 'search' (lihat pin lokasi) atau 'dir' (navigasi rute petunjuk arah)
+ * @return string Link Google Maps resmi
+ */
+function google_maps_url($alamat = null, $type = 'search') {
+    if (!$alamat) {
+        $p = get_pengaturan();
+        $alamat = $p['alamat'] ?? 'Jl. Ki Penjawi 12-10, Sidorejo Lor, Kec. Sidorejo, Kota Salatiga, Jawa Tengah 50714';
+    }
+    $query = urlencode(trim($alamat));
+    if ($type === 'dir') {
+        return "https://www.google.com/maps/dir/?api=1&destination=" . $query;
+    }
+    return "https://www.google.com/maps/search/?api=1&query=" . $query;
 }
 

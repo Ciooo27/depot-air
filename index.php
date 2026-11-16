@@ -43,7 +43,7 @@ try {
                     <span class="text-gradient">Diantar Tepat Waktu</span> Ke Rumah Anda
                 </h1>
                 <p class="lead text-muted mb-4" style="font-size: 1.15rem; max-width: 600px;">
-                    <?= htmlspecialchars($pengaturan['slogan']) ?>. Nikmati kemudahan memesan air isi ulang Reverse Osmosis (RO) dan galon bermerek secara online dengan kurir depot ramah & sigap.
+                    <?= htmlspecialchars($pengaturan['slogan']) ?>. Nikmati kemudahan memesan air isi ulang murni Reverse Osmosis (RO) dan Bio-Energy Mineral secara online dengan kurir depot ramah & sigap.
                 </p>
                 <div class="d-flex flex-wrap gap-3 align-items-center">
                     <a href="<?= url('views/produk.php') ?>" class="btn btn-primary btn-lg rounded-pill px-4 shadow">
@@ -152,9 +152,9 @@ try {
     <div class="container py-4">
         <div class="d-flex flex-wrap justify-content-between align-items-end mb-4" data-aos="fade-up">
             <div>
-                <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill mb-2">Paling Diminati</span>
-                <h2 class="fw-bold mb-1">Daftar Produk Unggulan</h2>
-                <p class="text-muted mb-0">Pilihan air isi ulang higienis, galon resmi bermerek, dan kemasan praktis.</p>
+                <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill mb-2">2 Produk Pilihan Utama</span>
+                <h2 class="fw-bold mb-1">Daftar Produk Air Minum</h2>
+                <p class="text-muted mb-0">Tersedia 2 varian air galon isi ulang murni & berkualitas tinggi: Air RO dan Air BIO.</p>
             </div>
             <a href="<?= url('views/produk.php') ?>" class="btn btn-outline-primary rounded-pill px-4 mt-3 mt-md-0">
                 Lihat Semua Produk <i class="bi bi-arrow-right ms-1"></i>
@@ -221,7 +221,7 @@ try {
                         1
                     </div>
                     <h5 class="fw-bold mb-2">Pilih Produk</h5>
-                    <p class="text-muted small mb-0">Pilih jenis air minum (Isi Ulang RO, Mineral, atau Galon Bermerek) dan tentukan jumlah galon yang Anda butuhkan.</p>
+                    <p class="text-muted small mb-0">Pilih varian air minum yang Anda inginkan (Air RO atau Air BIO) dan tentukan jumlah galon yang dibutuhkan.</p>
                 </div>
             </div>
 
@@ -282,7 +282,7 @@ try {
                         </div>
                         <div>
                             <div class="fw-bold small">Siti Rahmawati</div>
-                            <small class="text-muted">Ibu Rumah Tangga - Sukamaju</small>
+                            <small class="text-muted">Ibu Rumah Tangga - Sidorejo Lor, Salatiga</small>
                         </div>
                     </div>
                 </div>
@@ -294,7 +294,7 @@ try {
                         <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                     </div>
                     <p class="text-muted small fst-italic flex-grow-1">
-                        "Depot langganan terbaik untuk kantor kami. Setiap minggu kami order 10-15 galon, invoice dan struknya rapi. Sangat memudahkan pencatatan operasional!"
+                        "Depot langganan terbaik untuk kantor kami di Salatiga. Setiap minggu kami order air RO dan BIO untuk karyawan, invoice dan struknya rapi. Sangat recommended!"
                     </p>
                     <div class="d-flex align-items-center gap-3 pt-3 border-top" style="border-color: var(--card-border) !important;">
                         <div class="rounded-circle bg-success-subtle text-success fw-bold d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
@@ -302,7 +302,7 @@ try {
                         </div>
                         <div>
                             <div class="fw-bold small">Ahmad Fauzi</div>
-                            <small class="text-muted">Office Manager - PT Berkah Mandiri</small>
+                            <small class="text-muted">Office Manager - Salatiga</small>
                         </div>
                     </div>
                 </div>
@@ -314,7 +314,7 @@ try {
                         <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                     </div>
                     <p class="text-muted small fst-italic flex-grow-1">
-                        "Galon selalu dibersihkan dan dilap rapi sebelum diserahkan. Tutup galonnya tersegel kuat anti bocor. Mantap banget pelayanannya, recommended!"
+                        "Air BIO nya segar dan enak banget, badan terasa lebih bugar. Galon selalu dibersihkan dan dilap rapi sebelum diserahkan. Mantap pelayanannya!"
                     </p>
                     <div class="d-flex align-items-center gap-3 pt-3 border-top" style="border-color: var(--card-border) !important;">
                         <div class="rounded-circle bg-info-subtle text-info fw-bold d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
@@ -322,7 +322,7 @@ try {
                         </div>
                         <div>
                             <div class="fw-bold small">Bu Joko</div>
-                            <small class="text-muted">Pemilik Warung Makan</small>
+                            <small class="text-muted">Pemilik Warung Makan - Sidorejo</small>
                         </div>
                     </div>
                 </div>
@@ -344,18 +344,21 @@ try {
                             Anda juga dapat datang langsung ke outlet depot kami untuk melakukan isi ulang galon mandiri dengan harga spesial walk-in.
                         </p>
 
-                        <div class="d-flex align-items-start gap-3 mb-3">
-                            <div class="rounded-circle bg-danger-subtle text-danger p-2 fs-5">
+                        <a href="<?= google_maps_url($pengaturan['alamat'] ?? null, 'search') ?>" target="_blank" class="d-flex align-items-start gap-3 mb-3 text-decoration-none text-reset p-2 rounded-3" style="transition: background 0.2s;" onmouseover="this.style.background='var(--card-border)'" onmouseout="this.style.background='transparent'" title="Klik untuk membuka lokasi di Google Maps">
+                            <div class="rounded-circle bg-danger-subtle text-danger p-2 fs-5 flex-shrink-0">
                                 <i class="bi bi-geo-alt-fill"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-1">Alamat Outlet</h6>
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <h6 class="fw-bold mb-0">Alamat Outlet</h6>
+                                    <span class="badge bg-danger-subtle text-danger small"><i class="bi bi-box-arrow-up-right me-1"></i>Buka Maps</span>
+                                </div>
                                 <p class="text-muted small mb-0"><?= nl2br(htmlspecialchars($pengaturan['alamat'])) ?></p>
                             </div>
-                        </div>
+                        </a>
 
-                        <div class="d-flex align-items-start gap-3 mb-3">
-                            <div class="rounded-circle bg-primary-subtle text-primary p-2 fs-5">
+                        <div class="d-flex align-items-start gap-3 mb-3 px-2">
+                            <div class="rounded-circle bg-primary-subtle text-primary p-2 fs-5 flex-shrink-0">
                                 <i class="bi bi-clock-fill"></i>
                             </div>
                             <div>
@@ -364,27 +367,35 @@ try {
                             </div>
                         </div>
 
-                        <div class="d-flex align-items-start gap-3 mb-3">
-                            <div class="rounded-circle bg-success-subtle text-success p-2 fs-5">
+                        <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $pengaturan['no_whatsapp']) ?>" target="_blank" class="d-flex align-items-start gap-3 mb-3 text-decoration-none text-reset p-2 rounded-3" style="transition: background 0.2s;" onmouseover="this.style.background='var(--card-border)'" onmouseout="this.style.background='transparent'">
+                            <div class="rounded-circle bg-success-subtle text-success p-2 fs-5 flex-shrink-0">
                                 <i class="bi bi-whatsapp"></i>
                             </div>
                             <div>
                                 <h6 class="fw-bold mb-1">WhatsApp Pemesanan</h6>
                                 <p class="text-muted small mb-0"><?= htmlspecialchars($pengaturan['no_whatsapp']) ?></p>
                             </div>
-                        </div>
+                        </a>
                     </div>
 
-                    <div class="pt-3 border-top" style="border-color: var(--card-border) !important;">
-                        <a href="https://maps.google.com" target="_blank" class="btn btn-outline-primary w-100 rounded-pill py-2">
-                            <i class="bi bi-compass me-2"></i>Petunjuk Arah Google Maps
+                    <div class="pt-3 border-top d-flex flex-column gap-2" style="border-color: var(--card-border) !important;">
+                        <a href="<?= google_maps_url($pengaturan['alamat'] ?? null, 'search') ?>" target="_blank" class="btn btn-primary w-100 rounded-pill py-2 shadow-sm">
+                            <i class="bi bi-geo-alt-fill me-2"></i>Buka Lokasi di Google Maps
+                        </a>
+                        <a href="<?= google_maps_url($pengaturan['alamat'] ?? null, 'dir') ?>" target="_blank" class="btn btn-outline-primary w-100 rounded-pill py-2">
+                            <i class="bi bi-compass me-2"></i>Petunjuk Arah (Navigasi Rute)
                         </a>
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-7" data-aos="fade-left">
-                <div class="glass-card p-3 h-100 overflow-hidden rounded-4">
+                <div class="glass-card p-3 h-100 overflow-hidden rounded-4 position-relative">
+                    <!-- Tombol langsung ke Google Maps di pojok peta -->
+                    <a href="<?= google_maps_url($pengaturan['alamat'] ?? null, 'search') ?>" target="_blank" class="btn btn-sm btn-light position-absolute top-0 end-0 m-4 shadow rounded-pill px-3 py-2 fw-semibold border d-inline-flex align-items-center gap-1 z-3" style="background: rgba(255,255,255,0.95);">
+                        <i class="bi bi-box-arrow-up-right text-primary"></i>
+                        <span>Buka di Google Maps</span>
+                    </a>
                     <div class="w-100 h-100 rounded-3 overflow-hidden" style="min-height: 380px;">
                         <?= $pengaturan['maps_embed'] ?? '' ?>
                     </div>

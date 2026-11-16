@@ -163,7 +163,7 @@ $products = $stmt->fetchAll();
             <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
                 <div>
                     <h3 class="fw-bold mb-1">Manajemen Produk & Harga</h3>
-                    <p class="text-muted small mb-0">Kelola katalog air galon, kemasan botol/gelas, dan penetapan harga jual.</p>
+                    <p class="text-muted small mb-0">Kelola katalog produk air isi ulang (Air RO & Air BIO) dan penetapan harga jual.</p>
                 </div>
                 <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#productModal" onclick="openCreateModal()">
                     <i class="bi bi-plus-lg me-1"></i> Tambah Produk Baru
@@ -309,7 +309,7 @@ $products = $stmt->fetchAll();
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small fw-bold">Satuan</label>
-                            <input type="text" class="form-control" name="satuan" id="mSatuan" value="Galon" placeholder="cth: Galon, Dus, Botol" required>
+                            <input type="text" class="form-control" name="satuan" id="mSatuan" value="Galon (19L)" placeholder="cth: Galon (19L)" required>
                         </div>
 
                         <div class="col-md-6" id="stokAwalCol">
