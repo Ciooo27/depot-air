@@ -1,141 +1,75 @@
 <?php
 /**
  * Database Connection using PDO
- * Sistem Informasi Manajemen Depot Air Mineral (AquaDepot)
+ * AquaDepot - bisa dipakai lokal (XAMPP) dan online (Render + Aiven)
  */
 
 class Database {
-    private static $host = "localhost";
-    private static $db_name = "aquadepot_db";
-    private static $username = "root";
-    private static $password = "";
     private static $conn = null;
 
     public static function getConnection() {
-        if (self::$conn === null) {
-            $host = getenv('DB_HOST') ?: self::$host;
-            $dbName = getenv('DB_NAME') ?: self::$db_name;
-            $user = getenv('DB_USER') ?: self::$username;
-            $pass = getenv('DB_PASS') !== false ? getenv('DB_PASS') : self::$password;
-            $port = getenv('DB_PORT') ?: '3306';
-
-            // Support host:port format (common in Aiven / Railway)
-            if (strpos($host, ':') !== false) {
-                $parts = explode(':', $host, 2);
-                $host = $parts[0];
-                $port = $parts[1];
-            }
-
-            $dsn = "mysql:host=" . $host . ";port=" . $port . ";dbname=" . $dbName . ";charset=utf8mb4";
-            $options = [
-                PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES   => false,
-            ];
-
-            // Support SSL for remote cloud databases (Aiven / TiDB / Railway)
-            if ($host !== 'localhost' && $host !== '127.0.0.1') {
-                if (defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
-                    $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
-                }
-            }
-
-            try {
-                self::$conn = new PDO($dsn, $user, $pass, $options);
-
-                // Pastikan konsistensi: hanya 2 produk (Air RO & Air BIO) dan alamat depot terupdate
-                try {
-                    self::$conn->exec("DELETE FROM detail_transaksi WHERE produk_id NOT IN (1, 2)");
-                    self::$conn->exec("DELETE FROM detail_pesanan WHERE produk_id NOT IN (1, 2)");
-                    self::$conn->exec("DELETE FROM riwayat_stok WHERE produk_id NOT IN (1, 2)");
-                    self::$conn->exec("DELETE FROM stok WHERE produk_id NOT IN (1, 2)");
-                    self::$conn->exec("DELETE FROM produk WHERE id NOT IN (1, 2)");
-                    self::$conn->exec("DELETE FROM kategori WHERE id NOT IN (1, 2)");
-                    
-                    // Pastikan alamat dan embed maps tepat ke Salatiga
-                    self::$conn->exec("UPDATE pengaturan SET 
-                        alamat = 'Jl. Ki Penjawi 12-10, Sidorejo Lor, Kec. Sidorejo, Kota Salatiga, Jawa Tengah 50714',
-                        maps_embed = '<iframe src=\"https://maps.google.com/maps?q=Jl.+Ki+Penjawi+12-10,+Sidorejo+Lor,+Kec.+Sidorejo,+Kota+Salatiga,+Jawa+Tengah+50714&t=&z=16&ie=UTF8&iwloc=&output=embed\" width=\"100%\" height=\"380\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\"></iframe>'
-                        WHERE id = 1");
-                } catch (Exception $eClean) {
-                    // Abaikan jika tabel belum terisi
-                }
-            } catch (PDOException $e) {
-                // If database doesn't exist (Error 1049), attempt auto-creation
-                if ($e->getCode() == 1049 || strpos($e->getMessage(), 'Unknown database') !== false) {
-                    try {
-                        $tempPdo = new PDO("mysql:host=" . $host . ";charset=utf8mb4", $user, $pass, [
-                            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-                        ]);
-                        $tempPdo->exec("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-                        $tempPdo->exec("USE `$dbName`");
-
-                        $sqlFile = __DIR__ . '/../database/aquadepot_db.sql';
-                        if (file_exists($sqlFile)) {
-                            $sql = file_get_contents($sqlFile);
-                            $tempPdo->exec($sql);
-
-                            // Reconnect now that database and tables are created!
-                            self::$conn = new PDO($dsn, $user, $pass, $options);
-                            return self::$conn;
-                        }
-                    } catch (Exception $autoEx) {
-                        // If auto-create fails, show friendly UI below
-                    }
-                }
-
-                // Friendly HTML Error with direct 1-click installer link
-                $installUrl = (isset($_SERVER['HTTPS']) ? "https://" : "http://") . ($_SERVER['HTTP_HOST'] ?? 'localhost') . dirname($_SERVER['SCRIPT_NAME'] ?? '') . '/../install.php';
-                if (file_exists(__DIR__ . '/../install.php')) {
-                    $installUrl = 'install.php';
-                }
-
-                die("
-                <!DOCTYPE html>
-                <html lang='id'>
-                <head>
-                    <meta charset='UTF-8'>
-                    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                    <title>Database Belum Dibuat - AquaDepot</title>
-                    <link href='https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap' rel='stylesheet'>
-                    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css' rel='stylesheet'>
-                    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css'>
-                    <style>
-                        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #F4F8FC; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-                        .card-box { background: #FFFFFF; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); max-width: 620px; padding: 35px; border: 1px solid rgba(25, 118, 210, 0.1); }
-                    </style>
-                </head>
-                <body>
-                    <div class='card-box text-center'>
-                        <div class='rounded-circle d-inline-flex align-items-center justify-content-center text-warning bg-warning-subtle mb-3' style='width: 70px; height: 70px; font-size: 2rem;'>
-                            <i class='bi bi-database-exclamation'></i>
-                        </div>
-                        <h3 class='fw-bold mb-1'>Database 'aquadepot_db' Belum Dibuat</h3>
-                        <p class='text-muted small mb-4'>Koneksi ke MySQL di komputer Anda sudah berhasil, tetapi basis data <strong>aquadepot_db</strong> belum ada di phpMyAdmin.</p>
-                        
-                        <div class='p-3 bg-primary-subtle text-start rounded-4 mb-4 border border-primary-subtle'>
-                            <h6 class='fw-bold text-primary mb-2'><i class='bi bi-magic me-1'></i> Solusi 1-Detik (Paling Mudah):</h6>
-                            <p class='small text-muted mb-3'>Cukup klik tombol biru di bawah ini untuk membuat database dan mengimpor seluruh tabel otomatis:</p>
-                            <a href='install.php' class='btn btn-primary w-100 rounded-pill py-2 fw-bold shadow-sm'>
-                                <i class='bi bi-play-circle-fill me-1'></i> Pasang Database Otomatis Sekarang
-                            </a>
-                        </div>
-
-                        <div class='text-start border-top pt-3'>
-                            <h6 class='fw-bold small mb-2 text-muted'>Atau Impor Manual via phpMyAdmin:</h6>
-                            <ol class='small text-muted ps-3 mb-0'>
-                                <li>Buka <code>http://localhost/phpmyadmin</code> di tab baru browser Anda.</li>
-                                <li>Klik menu <strong>Databases</strong> &raquo; buat database bernama: <code>aquadepot_db</code> &raquo; klik <strong>Create</strong>.</li>
-                                <li>Pilih tab <strong>Import</strong> &raquo; upload file <code>database/aquadepot_db.sql</code> &raquo; klik <strong>Import</strong>.</li>
-                                <li>Setelah itu, <strong>Refresh (Muat Ulang)</strong> halaman ini!</li>
-                            </ol>
-                        </div>
-                    </div>
-                </body>
-                </html>
-                ");
-            }
+        if (self::$conn !== null) {
+            return self::$conn;
         }
-        return self::$conn;
+
+        $host   = getenv('DB_HOST') ?: 'localhost';
+        $dbName = getenv('DB_NAME') ?: 'aquadepot_db';
+        $user   = getenv('DB_USER') ?: 'root';
+        $pass   = getenv('DB_PASS') !== false ? getenv('DB_PASS') : '';
+        $port   = getenv('DB_PORT') ?: '3306';
+
+        // Dukung format host:port
+        if (strpos($host, ':') !== false) {
+            [$host, $port] = explode(':', $host, 2);
+        }
+
+        $isLocal = ($host === 'localhost' || $host === '127.0.0.1');
+
+        $dsn = "mysql:host=$host;port=$port;dbname=$dbName;charset=utf8mb4";
+        $options = [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ];
+
+        // SSL hanya untuk database online (Aiven)
+        if (!$isLocal) {
+            $ca = __DIR__ . '/ca.pem';
+            if (file_exists($ca)) {
+                $options[PDO::MYSQL_ATTR_SSL_CA] = $ca;
+            }
+            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+        }
+
+        try {
+            self::$conn = new PDO($dsn, $user, $pass, $options);
+            return self::$conn;
+        } catch (PDOException $e) {
+            // Lokal: buat database otomatis kalau belum ada
+            if ($isLocal && ($e->getCode() == 1049 || strpos($e->getMessage(), 'Unknown database') !== false)) {
+                try {
+                    $tempPdo = new PDO("mysql:host=$host;port=$port;charset=utf8mb4", $user, $pass, [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                    ]);
+                    $tempPdo->exec("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+                    $tempPdo->exec("USE `$dbName`");
+
+                    $sqlFile = __DIR__ . '/../database/aquadepot_db.sql';
+                    if (file_exists($sqlFile)) {
+                        $tempPdo->exec(file_get_contents($sqlFile));
+                        self::$conn = new PDO($dsn, $user, $pass, $options);
+                        return self::$conn;
+                    }
+                } catch (Exception $autoEx) {
+                    // lanjut ke pesan error di bawah
+                }
+            }
+
+            error_log('DB connection failed: ' . $e->getMessage());
+            http_response_code(500);
+            die("<h3 style='font-family:Arial'>Koneksi database gagal.</h3>"
+              . "<p style='font-family:Arial'>" . htmlspecialchars($e->getMessage()) . "</p>"
+              . "<p style='font-family:Arial'>Jika di komputer lokal, buka <a href='install.php'>install.php</a>.</p>");
+        }
     }
 }
